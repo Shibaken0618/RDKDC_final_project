@@ -4,7 +4,7 @@
 function gst = ur5FwdKin(angles)
 % define link lengths l0 to l5 and angles
 L = [89.2, 425, 392, 109.3, 94.75, 82.5] * 0.001;
-L0 = L(1); L1 = l(2); L2 = l(3); L3 = l(4); L4 = l(5); L5 = l(6);
+L0 = L(1); L1 = L(2); L2 = L(3); L3 = L(4); L4 = L(5); L5 = L(6);
 
 theta1 = angles(1); theta2 = angles(2); theta3 = angles(3);
 theta4 = angles(4); theta5 = angles(5); theta6 = angles(6);
