@@ -13,7 +13,7 @@ function mu = manipulability(J, measure)
 
         case 'detjac'
             % Calculate the Determinant of J
-            mu = sqrt(det(J*J'));
+            mu = det(J);
 
         case 'invcond'
             % Calculate the inverse of the condition number of J
