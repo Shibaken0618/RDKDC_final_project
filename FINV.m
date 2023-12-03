@@ -1,4 +1,4 @@
-% function for finding inverse of 4x4 homogenous matrix
+% function for calculating inverse of 4x4 homogenous matrix
 
 function invMat = FINV(g)
     % find new rotation and translation
