@@ -20,7 +20,7 @@ xi_2 = [0; 0; L0; 0; 1; 0];
 xi_3 = [0; 0; L0 + L1; 0; 1; 0];
 xi_4 = [0; 0; L0 + L1 + L2; 0; 1; 0];
 xi_5 = [0; L3; L0 + L1 + L2; 0; 0; 1];
-xi_6 = [0; L3; L0 + L1 + L2 + L4; 0; 1; 0];
+xi_6 = [0; L3; L0 + L1 + L2 + L4; 0; 1; 0]; 
 
 % define screw motion
 g1 = SCREW(xi_1, theta1); g2 = SCREW(xi_2, theta2);
