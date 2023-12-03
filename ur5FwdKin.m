@@ -1,5 +1,5 @@
 %% ur5FwdKin
-% function for the fowrard kinematics using the UR5 robot
+% function that calculates fowrard kinematics for the UR5 robot
 
 function gst = ur5FwdKin(angles)
 % define link lengths l0 to l5 and angles
