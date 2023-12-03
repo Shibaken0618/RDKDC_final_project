@@ -16,7 +16,7 @@ gst0 = [R0, p0; zeros(1,3), 1];
 
 % define twists
 q1 = [0; 0; 0]; w1 = [0; 0; 1];
-xi_1 = [w1; cross(-w, q)];
+xi_1 = [w1; cross(-w1, q1)];
 q2 = [0; 0; L0]; w2 = [0; 1; 0];
 xi_2 = [w2; cross(-w2, q2)]; 
 q3 = [0; 0; L0 + L1]; w3 = [0; 1; 0];
