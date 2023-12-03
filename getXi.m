@@ -1,6 +1,6 @@
 function [xi, theta] = getXi(G)  %% Returns normalized twist(xi) and theta
 
-[rows, cols] = size(G);s
+[rows, cols] = size(G);
 if ((rows ~= 4) || (cols ~= 4))
     error('This function(getXi) needs a 4X4 homogeneous matrix as input');
 end
