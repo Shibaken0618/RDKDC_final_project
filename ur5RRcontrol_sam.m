@@ -1,0 +1,24 @@
+function finalerr = ur5RRcontrol_sam(gdesired,K,ur5)
+T_step = .01;
+v_threshold = 50;
+w_threshold = pi/12;
+finalerr = 0;
+q_k = ur5.get_current_joints()
+
+
+while finalerr == 0
+    gst_star_inv = inv(gdesired);
+    gst = ur5FwdKin(q_k);
+    xi_k = getXi(gst_star_inv*gst);
+    %get v and w to calculate norms and see if approaching g_desired
+    v_k = xi_k(1:3);
+    w_k = xi_k(4:6);
+    if (norm(v_k)) >= v_threshold || (norm(w_k)) >= w_threshold
+        q_next = q_k - K*T_step * inv(ur5BodyJacobian(q_k)) * xi_k
+        ur5.move_joints(q_next,20)
+        q_k = q_next;
+    else
+        finalerr = gdesired(1:3,4) - gst(1:3,4);
+    end
+end
+end
