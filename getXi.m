@@ -14,6 +14,7 @@ theta = acos((trace(R) - 1) / 2);
 if theta == 0  %% Pure translation
     w = [0;0;0];
     v = p/norm(p);
+    theta = norm(p);
 else
     w = 1/(2*sin(theta)) * vector(R-R');
 %     P = ((eye(3) - expm(SKEW3(w)*theta))*SKEW3(w) + w*w'*theta)*v
