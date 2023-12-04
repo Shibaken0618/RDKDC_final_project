@@ -1,4 +1,4 @@
-function [xi, theta] = getXi(G)  %% Returns normalized twist(xi) and theta
+function xi = getXi(G)  %% Returns normalized twist(xi) and theta
 
 [rows, cols] = size(G);
 if ((rows ~= 4) || (cols ~= 4))
@@ -21,8 +21,8 @@ else
     v = inv((eye(3) - expm(SKEW3(w)*theta))*SKEW3(w) + w*w'*theta)*p;
 end
 
-xi(1:3) = v;
-xi(4:6) = w;
+xi(1:3) = v*theta;
+xi(4:6) = w*theta;
 
 end
 
