@@ -1,4 +1,4 @@
-function xi = getXi(G)  %% Returns normalized twist(xi) and theta
+function [xi, theta] = getXi(G)  %% Returns normalized twist(xi) and theta
 
 [rows, cols] = size(G);
 if ((rows ~= 4) || (cols ~= 4))
