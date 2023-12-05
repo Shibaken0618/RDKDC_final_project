@@ -12,6 +12,7 @@ if abs(manipulability(ur5BodyJacobian(q_k), 'detjac')) < 0.01
     % Abort and return -1
     disp('Matrix is close to being singular. Aborting.');
     finalerr = -1;
+    disp(['Final error = ',num2str(finalerr)]);
     return;
 end
 
@@ -27,6 +28,7 @@ if manipulability(ur5BodyJacobian(angles), 'detjac') <0.01
     % Abort and return -1
     disp('Matrix is close to being singular. Aborting.');
     finalerr = -1;
+    disp(['Final error = ',num2str(finalerr)]);
     return;
 end
 
@@ -63,6 +65,7 @@ while norm(p_present - p_star) >= 0.005 || abs(theta_present - theta_star) >= 15
         % Abort and return -1
         disp('Matrix is close to being singular. Aborting.');
         finalerr = -1;
+        disp(['Final error = ',num2str(finalerr)]);
         return;
     end
 end
