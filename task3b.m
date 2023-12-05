@@ -30,7 +30,7 @@ xi5 = [prod5(1:3,4);vector(prod5(1:3,1:3))];
 prod6 = (gst)\grad_g6;
 xi6 = [prod6(1:3,4);vector(prod6(1:3,1:3))];
 %Form the approximate jacobian and calculated jacobian
-Japprox = [xi1,xi2,xi3,xi4,xi5,xi6];
-J = ur5BodyJacobian(q);
+Japprox = [xi1,xi2,xi3,xi4,xi5,xi6]
+J = ur5BodyJacobian(q)
 %Approximation Error
 JacobianError = norm(Japprox-J)

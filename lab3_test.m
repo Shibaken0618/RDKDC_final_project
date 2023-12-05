@@ -1,12 +1,12 @@
 ur5 = ur5_interface();
-start = [.1;-pi/2;.1;-pi/2;.1;.1];
-%ur5.move_joints(start,10);
+start = [pi/12;-pi/2;pi/12;-pi/2;pi/12;pi/12];
+ur5.move_joints(start,10);
+pause(10)
 
-thetas = [pi/6;pi/6;pi/6;pi/6;pi/6;pi/6];
-
+thetas = [pi/4;-pi/4;pi/12;-pi/2;pi/12;pi/12];
 gdesired = ur5FwdKin(thetas);
-gst = ur5FwdKin(thetas);
-J = ur5BodyJacobian(thetas);
+%Frame_Desired = tf_frame('base_link','Goal', gdesired);
+%pause(.5)(norm(w_k-w_final))
 
-error = ur5RRcontrol_sam(gdesired,.1,ur5);
+error = ur5RRcontrol_sam(gdesired,.05,ur5)
 
