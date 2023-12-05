@@ -12,6 +12,7 @@ if abs(manipulability(ur5BodyJacobian(q_k), 'detjac')) < 0.01
     % Abort and return -1
     disp('Matrix is close to being singular. Aborting.');
     result = -1;
+    return;
 end
 
 % angles = rand(6,1)*pi/6
@@ -26,6 +27,7 @@ if manipulability(ur5BodyJacobian(angles), 'detjac') <0.01
     % Abort and return -1
     disp('Matrix is close to being singular. Aborting.');
     result = -1;
+    return;
 end
 
 gst_star = ur5FwdKin(angles);  %% Generate the goal point randomly
@@ -61,6 +63,7 @@ while norm(p_present - p_star) >= 0.005 || abs(theta_present - theta_star) >= 15
         % Abort and return -1
         disp('Matrix is close to being singular. Aborting.');
         result = -1;
+        return;
     end
 end
 
