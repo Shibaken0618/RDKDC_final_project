@@ -1,48 +1,62 @@
-%% Initiate
-clc;clear
+function finalerr = ur5RRcontrol(gdesired, K, ur5_interface)
 
-%% Define vatiables
-K = 10;
-t_step = 1;
-q_k = zeros(6,1);  %% Initial angle of joints(probably wrong)
+ur5 = ur5_interface;
+ur5.move_joints(ur5.home, 5);
+pause(5);
 
-% angles = rand(6,1)*pi/6
-angles = [0.3554
-          0.3968
-          0.3891
-          0.2054
-          0.3432
-          0.0896];
+t_step = 5;
+finalerr = 0;
 
-gst_star = ur5FwdKin(angles);  %% Generate the goal point randomly
+q_k = [0.0487
+       -1.4889
+       0.0707
+       -1.5177
+       0.0793
+       0.0360];
+ur5.move_joints(q_k, 5);  %% Deviate the home position to avoid sigularity
+pause(5)
+
+gst_star = gdesired;
 
 p_star = gst_star(1:3, 4);  %% The goal translation
-R_star = gst_star(1:3, 1:3);  %% The goal rotation
-[xi_star, theta_star] = getXi(gst_star);
-xi_star = xi_star * theta_star;  %% The un-normalized goal xi
+[~, theta_star] = getXi(gst_star);
 
 gst_present = ur5FwdKin(q_k);  %% The present rigid body motion matrix which is ought to be the home position
 p_present = gst_present(1:3, 4);
-R_present = gst_present(1:3, 1:3);
-[xi_present, theta_present] = getXi(gst_present);
-xi_present = xi_present * theta_present;
+[~, theta_present] = getXi(gst_present);
 
 exp_xi_k = inv(gst_star)*gst_present;  %% Error between the goal point and the home position of the end effector
-[xi_k, theta_k] = getXi(exp_xi_k);
-xi_k = xi_k * theta_k;  %% The initial un-normalized xi_k
+[xi_k, ~] = getXi(exp_xi_k);
 
 while norm(p_present - p_star) >= 0.005 || abs(theta_present - theta_star) >= 15*pi/180
+    if manipulability(ur5BodyJacobian(q_k), 'detjac') <0.00001
+        % Abort and return -1
+        finalerr = -1;
+        break
+    end
+
     q_k1 = q_k - K*t_step*inv(ur5BodyJacobian(q_k))*xi_k;   %% q_k1 represents q_k+1 which is the next point
     q_k = q_k1;
-%     pause(0.5)
+
+    ur5.move_joints(q_k, t_step);
+    pause(t_step)
+
     gst_present = ur5FwdKin(q_k);
     p_present = gst_present(1:3, 4);
-    R_present = gst_present(1:3, 1:3);
-    [xi_presnet, theta_present] = getXi(gst_present);
-    xi_present = xi_present * theta_present;
+    [~, theta_present] = getXi(gst_present);
+    
     exp_xi_k = inv(gst_star)*gst_present;
-    [xi_k, theta_k] = getXi(exp_xi_k);
-    xi_k = xi_k * theta_k;
+    [xi_k, ~] = getXi(exp_xi_k);
+    disp('Current angles are:')
+    disp(ur5.get_current_joints())
+
+
 end
 
-disp(xi_k)
+if finalerr == -1
+    warning('Matrix is close to being singular. Aborting.');
+else
+    finalerr = norm(p_present - p_star);
+end
+
+end
