@@ -1,3 +1,4 @@
+%creates 4x4 hat matrix for a given 6x1 xi vector
 function hat4 = HAT4(xi)
     w = xi(4:6,1);
     v = xi(1:3,1);
