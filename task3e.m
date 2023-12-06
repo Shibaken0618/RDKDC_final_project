@@ -13,4 +13,4 @@ disp(angles)
 
 gst_star = ur5FwdKin(angles);
 
-error = ur5RRcontrol(gst_star, 0.05, ur5_interface);
+error = ur5RRcontrol(gst_star, 0.03, ur5_interface);
