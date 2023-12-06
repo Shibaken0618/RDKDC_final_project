@@ -23,7 +23,7 @@ p_present = gst_present(1:3, 4);
 exp_xi_k = inv(gst_star)*gst_present;  %% Error between the goal point and the start point
 [xi_k, ~] = getXi(exp_xi_k);
 
-while norm(p_present - p_star) >= 0.003 || abs(theta_present - theta_star) >= 15*pi/180
+while norm(p_present - p_star) >= 0.03 || abs(theta_present - theta_star) >= 15*pi/180
     if abs(manipulability(ur5BodyJacobian(q_k), 'detjac')) <0.00001
         finalerr = -1;  %% Abort and return -1
         break
@@ -52,7 +52,7 @@ if finalerr == -1
     disp(finalerr);
 else
     finalerr = norm(p_present - p_star);
-    disp(['The final positional error is ', num2str(finalerr*1000), 'cm'])
+    disp(['The final positional error is ', num2str(finalerr*100), 'cm'])
 end
 
 end
