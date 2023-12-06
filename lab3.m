@@ -162,7 +162,6 @@ end
 
 %% ur5RRcontrol test
 
-clc;clear
 ur5 = ur5_interface;
 ur5.move_joints(ur5.home, 5);
 pause(5);
