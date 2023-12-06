@@ -1,33 +1,54 @@
 function finalerr = ur5RRcontrol_sam(gdesired,K,ur5)
-T_step = 5;
-v_threshold = .050;
-w_threshold = pi/12;
+T_step = 5; %time step
+p_threshold = .01; % get within 5cm of desired possition
+theta_threshold = pi/12; % get within pi/12 radians of desired orientation
 finalerr = 0;
+%calculate variables nee
 q_k = ur5.get_current_joints();
-[xi_desired,theta_desired] = getXi(gdesired);
-xi_desired = xi_desired * theta_desired;
-v_final = xi_desired(1:3);
-w_final = xi_desired(4:6);
+[~,theta_desired] = getXi(gdesired);
 p_desired = gdesired(1:3,4);
 
+%check if initial posittion is not a singularity
+if abs(manipulability(ur5BodyJacobian(q_k), 'detjac')) < 0.001
+    % Abort and return -1
+    disp(abs(manipulability(ur5BodyJacobian(q_k), 'detjac')))
+    disp('Matrix is close to being singular. Aborting.');
+    finalerr = -1;
+    disp(['Final error = ',num2str(finalerr)]);
+    return;
+end
+
+%loop until an error or convergence with g desired
 while finalerr == 0
+    %calculate variables neded for resolved rate control
     gst_star_inv = inv(gdesired);
     gst = ur5FwdKin(q_k);
     p_k = gst(1:3,4);
-    [xi_k, theta_k] = getXi(gst_star_inv*gst);
-    xi_k = xi_k * theta_k;
-    %get v and w to calculate norms and see if approaching g_desired
-    v_k = xi_k(1:3);
-    w_k = xi_k(4:6);
-    if (norm(p_k-p_desired)) >= v_threshold || (norm(theta_k-theta_desired,1)) >= w_threshold
-        (norm(p_k-p_desired))
-        (norm(theta_k-theta_desired,1))
+    %variables needed for checking if we approach g desired
+    [xi_k, ~] = getXi(gst_star_inv*gst);
+    [~, theta_present] = getXi(gst);
+    
+    % keep updating joint angles until we are close to g desired
+    if (norm(p_k-p_desired)) >= p_threshold || (abs(theta_present-theta_desired)) >= theta_threshold
+        %calculate new joint angles using resolved rate control
         q_k1 = q_k - K*T_step * inv(ur5BodyJacobian(q_k)) * xi_k;
-        ur5.move_joints(q_k1,T_step)
+        %move the robot to new calculated joint angles and pause so
+        %simulaton can reach position
+        ur5.move_joints(q_k1,T_step); 
         pause(T_step)
-        q_k = ur5.get_current_joints()
+        %replace old joint angles with current angles
+        q_k = ur5.get_current_joints(); 
+        %Check if new position is close to a singularity
+        if abs(manipulability(ur5BodyJacobian(q_k), 'detjac')) < 0.001
+            % Abort and return -1
+            disp('Matrix is close to being singular. Aborting.');
+            finalerr = -1;
+            disp(['Final error = ',num2str(finalerr)]);
+            return;
+        end
     else
-        finalerr = gdesired(1:3,4) - gst(1:3,4);
+        finalerr = norm(gdesired(1:3,4) - gst(1:3,4)) * 100; %output final positonal error in cm
+        return;
     end
 end
 end
