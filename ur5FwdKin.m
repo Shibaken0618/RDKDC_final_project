@@ -6,11 +6,11 @@ function gst = ur5FwdKin(angles)
 L = [89.2, 425, 392, 109.3, 94.75, 82.5] * 0.001;
 L0 = L(1); L1 = L(2); L2 = L(3); L3 = L(4); L4 = L(5); L5 = L(6);
 
-theta1 = angles(1); theta2 = angles(2); theta3 = angles(3);
-theta4 = angles(4); theta5 = angles(5); theta6 = angles(6);
+theta1 = angles(1); theta2 = angles(2) + pi/2; theta3 = angles(3);
+theta4 = angles(4) + pi/2; theta5 = angles(5); theta6 = angles(6);
 
 % define base configuration gst0
-R0 = [1, 0, 0; 0, 0, -1; 0, 1, 0];
+R0 = [1, 0, 0; 0, 0, 1; 0, -1, 0];
 p0 = [0; L3 + L5; L0 + L1 + L2 + L4];
 gst0 = [R0, p0; zeros(1,3), 1];
 
