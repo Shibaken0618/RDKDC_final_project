@@ -22,8 +22,12 @@ end_frame = tf_frame('base_link','end',eye(4));
 pause(1);
 end_frame.move_frame('base_link',g_end);
 
+theta_start = ur5InvKin(g_start);
+
+ur5.move_joints(theta_start(:,1), 20);
+pause(20)
 
 disp('The goal position is:');
-disp(g_start)
+disp(g_end)
 
-error = ur5RRcontrol(g_start, 0.01, ur5_interface);
+error = ur5RRcontrol(g_end, 0.02, ur5_interface);

@@ -1,9 +1,5 @@
 function finalerr = ur5RRcontrol(gdesired, K, ur5_interface)
 
-ur5 = ur5_interface;
-ur5.move_joints(ur5.home, 5);
-pause(5);
-
 t_step = 5;
 finalerr = 0;
 
@@ -23,7 +19,7 @@ p_present = gst_present(1:3, 4);
 exp_xi_k = inv(gst_star)*gst_present;  %% Error between the goal point and the start point
 [xi_k, ~] = getXi(exp_xi_k);
 
-while norm(p_present - p_star) >= 0.03 || abs(theta_present - theta_star) >= 15*pi/180
+while norm(p_present - p_star) >= 0.001 || abs(theta_present - theta_star) >= 15*pi/180
     if abs(manipulability(ur5BodyJacobian(q_k), 'detjac')) <0.00001
         finalerr = -1;  %% Abort and return -1
         break
@@ -34,6 +30,10 @@ while norm(p_present - p_star) >= 0.03 || abs(theta_present - theta_star) >= 15*
     
     ur5.move_joints(q_k, t_step);
     pause(t_step)
+end_frame.move_frame('base_link',g_end);
+
+
+disp('The goal position is:');
 
     gst_present = ur5FwdKin(q_k);
     p_present = gst_present(1:3, 4);
