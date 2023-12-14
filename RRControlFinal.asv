@@ -11,19 +11,17 @@ g_end = [0 -1 0 .4;
 %% ur5RRcontrol test
 
 ur5 = ur5_interface;
-ur5.move_joints(ur5.home, 9);
-pause(9);
+ur5.move_joints(ur5.home, 5);
+pause(5);
 %put frames at start and end
-start_frame = tf_frame('base_link','start',eye(4));
+start = tf_frame('base_link','start',I4);
 pause(1);
-start_frame.move_frame('base_link',g_start);
-
-end_frame = tf_frame('base_link','end',eye(4));
-pause(1);
-end_frame.move_frame('base_link',g_end);
+tool_frame.move_frame('base_link',gst);
 
 
 disp('The goal position is:');
 disp(g_start)
 
-error = ur5RRcontrol(g_start, 0.01, ur5_interface);
+gst_star = ur5FwdKin();
+
+error = ur5RRcontrol(gst_star, 0.03, ur5_interface);
