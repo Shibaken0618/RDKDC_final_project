@@ -1,3 +1,4 @@
+%% Using original FwdKin
 clc; clear
 errors = zeros(6,1);
 
@@ -6,7 +7,7 @@ ur5.move_joints(ur5.home, 15);
 pause(15);
 
 q = (rand(6,1) * 2*pi) - pi;
-g_start = ur5FwdKin(q);
+g_start = ur5FwdKin_DH(q);
 
 start_frame = tf_frame('base_link','start',eye(4));
 pause(1);
