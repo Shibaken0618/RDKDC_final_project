@@ -1,8 +1,6 @@
 function finalerr = ur5RRcontrol(gdesired, K, ur5_interface)
 ur5 = ur5_interface;
 
-ur5 = ur5_interface;
-
 t_step = 5;
 finalerr = 0;
 

@@ -1,11 +1,11 @@
-g_start = [0 -1 0 .25;
-           -1 0 0 .6;
-           0 0 -1 .22;
+g_start = [cos(x) sin(x) 0 .25;
+           -sin(x) cos(x) 0 .6;
+           0 0 1 .22;
            0 0 0 1];
 
-g_end = [0 -1 0 .4;
-        -1 0 0 .45;
-         0 0 -1 .22;
+g_end = [cos(x) sin(x) 0 .4;
+        -si(x) 0 0 .45;
+         0 0 1 .22;
          0 0 0 1];
 
 %% ur5RRcontrol test
@@ -23,12 +23,19 @@ end_frame = tf_frame('base_link','end',eye(4));
 pause(1);
 end_frame.move_frame('base_link',g_end);
 
-theta_start = ur5InvKin(g_start);
+g_10cm = [1 0 0 .10; 0 1 0 0; 0 0 1 0; 0 0 0 1];
 
-ur5.move_joints(theta_start(:,6), 5);
-pause(5)
+frame_10cm = tf_frame('base_link','10cm offset origin',eye(4));
+pause(1);
+frame_10cm.move_frame('base_link',g_start * g_10cm);
 
-disp('The goal position is:');
-disp(g_end)
 
-error = ur5RRcontrol(g_end, 0.05, ur5_interface);
+% theta_start = ur5InvKin(g_start);
+% 
+% ur5.move_joints(theta_start(:,6), 5);
+% pause(5)
+% 
+% disp('The goal position is:');
+% disp(g_end)
+% 
+% error = ur5RRcontrol(g_end, 0.05, ur5_interface);
