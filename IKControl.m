@@ -11,7 +11,8 @@ g_end = [cos(x) -sin(x) 0 .4;
          0 0 -1 .22;
          0 0 0 1];
 %initialize important values and set to home
-ur5 = ur5_interface;
+ur5 = ur5_interface();
+pause(1)
 ur5.move_joints(ur5.home, 20);
 pause(20);
 
@@ -30,8 +31,8 @@ g_end = ur5FwdKin_DH(q_end);
 q_sol_end = ur5InvKin(g_end * pen_tip_offset2);
 
 % Find the best path
-[min_error, min_error_i] = min(vecnorm(q_start - q_sol,1));  
-errors = errors + abs(q_sol(:,min_error_i) - q_start);
+[min_error, min_error_i] = min(vecnorm(q_start - q_sol_start,1));  
+errors = errors + abs(q_sol_start(:,min_error_i) - q_start);
 
 %plot frames
 start_frame = tf_frame('base_link','start',eye(4));
