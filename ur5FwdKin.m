@@ -11,7 +11,7 @@ theta4 = angles(4) + pi/2; theta5 = angles(5); theta6 = angles(6);
 
 % define base configuration gst0
 R0 = [1, 0, 0; 0, 0, 1; 0, -1, 0];
-p0 = [0; L3 + L5; L0 + L1 + L2 + L4];
+p0 = [0; L3 + L5 + .12228; L0 + L1 + L2 + L4 + .049];
 gst0 = [R0, p0; zeros(1,3), 1];
 
 % define twists

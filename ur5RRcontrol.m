@@ -1,7 +1,7 @@
 function finalerr = ur5RRcontrol(gdesired, K, ur5_interface)
 ur5 = ur5_interface;
 
-t_step = 5;
+t_step = 2;
 finalerr = 0;
 
 q_k = ur5.get_current_joints();
@@ -30,7 +30,7 @@ while norm(p_present - p_star) >= 0.005 || abs(theta_present - theta_star) >= 15
 
     q_k1 = q_k - K*t_step*inv(ur5BodyJacobian(q_k))*xi_k;   %% q_k1 represents q_k+1 which is the next point
     q_k = q_k1;
-    
+
     ur5.move_joints(q_k, t_step);
     pause(t_step)
 

@@ -11,7 +11,7 @@ p = G(1:3, 4);  %% Translation matrix
 
 theta = acos((trace(R) - 1) / 2);
 
-if theta == 0  %% Pure translation
+if theta < 1e-4  %% Pure translation
     w = [0;0;0];
     v = p/norm(p);
     theta = norm(p);

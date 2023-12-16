@@ -1,11 +1,12 @@
-g_start = [cos(x) sin(x) 0 .25;
+x = pi/2;
+g_start = [cos(x) -sin(x) 0 .25;
            -sin(x) cos(x) 0 .6;
-           0 0 1 .22;
+           0 0 -1 .22;
            0 0 0 1];
 
-g_end = [cos(x) sin(x) 0 .4;
-        -si(x) 0 0 .45;
-         0 0 1 .22;
+g_end = [cos(x) -sin(x) 0 .4;
+        -sin(x) cos(x) 0 .45;
+         0 0 -1 .22;
          0 0 0 1];
 
 %% ur5RRcontrol test
@@ -30,12 +31,18 @@ pause(1);
 frame_10cm.move_frame('base_link',g_start * g_10cm);
 
 
-% theta_start = ur5InvKin(g_start);
-% 
-% ur5.move_joints(theta_start(:,6), 5);
-% pause(5)
-% 
-% disp('The goal position is:');
-% disp(g_end)
-% 
-% error = ur5RRcontrol(g_end, 0.05, ur5_interface);
+pen_tip_offset = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];
+pen_tip_offset1 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1]; %inverse pen tip transformation from tool tip to base_link
+
+pen_tip = tf_frame('tool0','pen tip',pen_tip_offset);
+pause(1);
+
+theta_start = ur5InvKin(g_start*pen_tip_offset1);
+
+ur5.move_joints(theta_start(:,6), 15);
+pause(15)
+
+disp('The goal position is:');
+disp(g_end)
+
+error = ur5RRcontrol(g_end, 0.05, ur5_interface);
