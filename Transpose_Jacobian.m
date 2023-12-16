@@ -1,21 +1,35 @@
 ur5 = ur5_interface();
 
-disp('Teach the start position, then press any key to continue.');
-% Switch to pendant control
-ur5.switch_to_pendant_control();
-waitforbuttonpress;
+% disp('Teach the start position, then press any key to continue.');
+% % Switch to pendant control
+% ur5.swtich_to_pendant_control();
+% waitforbuttonpress;
+% 
+% % Get the start joint angles
+% alpha = ur5.get_current_joints();
+% disp('Teach the start position, then press any key to continue.');
+% 
+% % Switch to pendant control
+% ur5.swtich_to_pendant_control();
+% waitforbuttonpress;
+% 
+% % Get the target joint angles
+% theta = ur5.get_current_joints();
+% disp('Switch to ros control.');
 
-% Get the start joint angles
-alpha = ur5.get_current_joints();
-disp('Teach the start position, then press any key to continue.');
+alpha = [    0.8686
+   -1.4435
+    1.6247
+   -1.7839
+   -1.4066
+   -0.2459];
 
-% Switch to pendant control
-ur5.switch_to_pendant_control();
-waitforbuttonpress;
-
-% Get the target joint angles
-theta = ur5.get_current_joints();
-disp('Switch to ros control.');
+theta = [    0.5896
+   -1.4436
+    1.6245
+   -1.7837
+   -1.4064
+   -0.2459];
 
 % Define control gain
 lambda = 0.1;
@@ -25,7 +39,7 @@ numIterations = 100;
 stepSize = 0.01;
 
 % Switch to ros control
-ur5.swtich_to_ros_control();
+% ur5.swtich_to_ros_control();
 ur5.move_joints(ur5.home, 10);
 pause(10);
 ur5.move_joints(alpha,10);
@@ -35,22 +49,23 @@ pause(10);
 for i = 1:numIterations
     % Calculate current end-effector position
     currentAngles = ur5.get_current_joints();
-    currentPos = ur5FwdKin_DH(currentAngles); % Replace with the actual forward kinematics function
+    % currentPos = ur5FwdKin(currentAngles);
 
     % Calculate end-effector position error
-    error = theta - currentPos;
+    error = theta - currentAngles;
 
     % Calculate Jacobian matrix
-    J = ur5BodyJacobian(currentAngles); % Replace with the actual Jacobian matrix calculation function
+    J = ur5BodyJacobian(currentAngles);
 
     % Use the transpose Jacobian control law to compute joint velocities
     deltaQ = lambda * J' * error;
 
     % Update joint angles
-    currentJointAngles = currentAngles + stepSize * deltaQ;
+    currentJointAngles = currentAngles + deltaQ;
 
     % Send joint angles to the robot
-    sendJointAngles(currentAngles); % Replace with the actual function to send joint angles
+    ur5.move_joints(currentJointAngles,lambda);
+    pause(lambda);
 end
 
 ur5.move_joints(ur5.home, 10);
