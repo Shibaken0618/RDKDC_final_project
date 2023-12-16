@@ -11,7 +11,7 @@ g_end = [cos(x) -sin(x) 0 .4;
 
 %% ur5RRcontrol test
 
-ur5 = ur5_interface;
+ur5 = ur5_interface();
 ur5.move_joints(ur5.home, 20);
 pause(20);
 

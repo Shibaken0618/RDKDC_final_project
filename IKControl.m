@@ -48,6 +48,14 @@ pen_tip_frame = tf_frame('tool0','pen tip',pen_tip_offset1);
 %Move to the positions following best path
 ur5.move_joints(q_sol_start(:,min_error_i), 20);
 pause(20)
+%display error
+[start_orientation_error,start_position_error] = locationError(g_start, ur5FwdKin_DH(ur5.get_current_joints()));
+disp(['Start Orientation Error: ', num2str(start_orientation_error)])
+disp(['Start Position Error: ', num2str(start_position_error)])
 
 ur5.move_joints(q_sol_end(:,min_error_i), 10);
 pause(10)
+%display error
+[end_orientation_error,end_position_error] = locationError(g_end, ur5FwdKin_DH(ur5.get_current_joints()));
+disp(['End Orientation Error: ', num2str(end_orientation_error)])
+disp(['End Position Error: ', num2str(end_position_error)])

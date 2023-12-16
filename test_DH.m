@@ -2,7 +2,7 @@
 clc; clear
 errors = zeros(6,1);
 
-ur5 = ur5_interface;
+ur5 = ur5_interface();
 ur5.move_joints(ur5.home, 20);
 pause(20);
 

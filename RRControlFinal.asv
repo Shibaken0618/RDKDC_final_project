@@ -42,8 +42,7 @@ theta_start = ur5InvKin(g_start*pen_tip_offset1);
 ur5.move_joints(theta_start(:,6), 15);
 pause(15)
 [start_orientation_error,start_position_error] = locationError(g_start, ur5FwdKin(ur5.get_current_joints()));
-disp(['Start Orientation Error: ', num2str(start_orientation_error)])
-disp(['Start Position Error: ', num2str(start_position_error)])
+disp('Start Orientation Error:')
 
 
 disp('The goal position is:');
@@ -51,5 +50,3 @@ disp(g_end)
 
 error = ur5RRcontrol(g_end, 0.05, ur5_interface);
 [end_orientation_error,end_position_error] = locationError(g_end, ur5FwdKin(ur5.get_current_joints()));
-disp(['End Orientation Error: ', num2str(end_orientation_error)])
-disp(['End Position Error: ', num2str(end_position_error)])
