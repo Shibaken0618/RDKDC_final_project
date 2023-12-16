@@ -28,10 +28,10 @@ T23 = DH(a3, alpha3, d3, angles(3));
 T34 = DH(a4, alpha4, d4, angles(4));
 T45 = DH(a5, alpha5, d5, angles(5));
 T56 = DH(a6, alpha6, d6, angles(6));
-T6P = DH(.12228,0,.049,0); % tool0 to pen tip trasnformation using DH params
+% T6P = DH(.12228,0,.049,0); % tool0 to pen tip trasnformation using DH params
 
 % return T06
-T06 = T01 * T12 * T23 * T34 * T45 * T56 * T6P;
+T06 = T01 * T12 * T23 * T34 * T45 * T56;
 
 end
 
