@@ -22,12 +22,12 @@ pen_tip_offset2 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1];
 
 %change base_link frames to DH parameter frames
 q_start = ur5InvKin(g_start * pen_tip_offset2);%not needed in test
-g_start = ur5FwdKin_DH(q_start);
+g_start = ur5FwdKin(q_start);%why do ur5FwdKin and ur5FwdKin_DH work the same
 q_sol_start = ur5InvKin(g_start * pen_tip_offset2);% multiply inverse transform
 
 %change base_link frames to DH parameter frames
 q_end = ur5InvKin(g_end * pen_tip_offset2);
-g_end = ur5FwdKin_DH(q_end);
+g_end = ur5FwdKin(q_end);
 q_sol_end = ur5InvKin(g_end * pen_tip_offset2);
 
 % Find the best path
@@ -49,13 +49,14 @@ pen_tip_frame = tf_frame('tool0','pen tip',pen_tip_offset1);
 ur5.move_joints(q_sol_start(:,min_error_i), 20);
 pause(20)
 %display error
-[start_orientation_error,start_position_error] = locationError(g_start, ur5FwdKin_DH(ur5.get_current_joints()));
+[start_orientation_error,start_position_error] = locationError(g_start, ur5FwdKin(ur5.get_current_joints()));
 disp(['Start Orientation Error: ', num2str(start_orientation_error)])
 disp(['Start Position Error: ', num2str(start_position_error)])
 
+%Move to the positions following best path
 ur5.move_joints(q_sol_end(:,min_error_i), 10);
 pause(10)
 %display error
-[end_orientation_error,end_position_error] = locationError(g_end, ur5FwdKin_DH(ur5.get_current_joints()));
+[end_orientation_error,end_position_error] = locationError(g_end, ur5FwdKin(ur5.get_current_joints()));
 disp(['End Orientation Error: ', num2str(end_orientation_error)])
 disp(['End Position Error: ', num2str(end_position_error)])
