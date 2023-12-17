@@ -26,8 +26,6 @@ end_frame.move_frame('base_link',g_end);
 
 g_10cm = [1 0 0 .10; 0 1 0 0; 0 0 1 0; 0 0 0 1];
 
-frame_10cm = tf_frame('base_link','10cm offset origin',eye(4));
-pause(1);
-frame_10cm.move_frame('base_link',g_start * g_10cm);
+g_corner1 = g_start * g_10cm;
 
 
