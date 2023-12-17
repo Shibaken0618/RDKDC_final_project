@@ -12,8 +12,8 @@ g_end = [cos(x) -sin(x) 0 .4;
 %% ur5RRcontrol test
 
 ur5 = ur5_interface();
-%ur5.move_joints(ur5.home, 15);
-%pause(15);
+ur5.move_joints(ur5.home, 15);
+pause(15);
 
 %put frames at start and end
 start_frame = tf_frame('base_link','start',eye(4));
@@ -24,12 +24,15 @@ end_frame = tf_frame('base_link','end',eye(4));
 pause(1);
 end_frame.move_frame('base_link',g_end);
 
-g_10cm = [1 0 0 .10; 0 1 0 0; 0 0 1 0; 0 0 0 1];
+[g_corner1, g_corner2] = intermediatePointCalc(g_start,g_end);
 
-frame_10cm = tf_frame('base_link','10cm offset origin',eye(4));
+corner1_frame = tf_frame('base_link','corner1',eye(4));
 pause(1);
-frame_10cm.move_frame('base_link',g_start * g_10cm);
+corner1_frame.move_frame('base_link',g_corner1);
 
+corner2_frame = tf_frame('base_link','corner2',eye(4));
+pause(1);
+corner2_frame.move_frame('base_link',g_corner2);
 
 pen_tip_offset = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];
 pen_tip_offset1 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1]; %inverse pen tip transformation from tool tip to base_link
@@ -45,6 +48,10 @@ pause(15)
 disp(['Start Orientation Error: ', num2str(start_orientation_error)])
 disp(['Start Position Error: ', num2str(start_position_error)])
 
+
+error1 = ur5RRcontrol(g_corner1, 0.05, ur5_interface);
+
+error2 = ur5RRcontrol(g_corner2, 0.05, ur5_interface);
 
 disp('The goal position is:');
 disp(g_end)
