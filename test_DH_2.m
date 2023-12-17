@@ -1,7 +1,7 @@
 %% Initialize
 clc; clear
 ur5 = ur5_interface;
-num = 5;
+num = 50;
 pen_tip_offset1 = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];  %% %% Coordinate of pen-tip in tool frame
 pen_tip_offset2 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1];
 
@@ -33,6 +33,7 @@ g_end = ur5FwdKin_DH(angles_end);
 
 pen_start = g_start * pen_tip_offset1;
 pen_end = g_end * pen_tip_offset1;
+pen_end(1:3, 1:3) = pen_start(1:3, 1:3);
 
 [pen_corner1, pen_corner2] = intermediatePointCalc(pen_start,pen_end);
 % g_corner1 = pen_corner1 * pen_tip_offset2;
@@ -59,8 +60,8 @@ for i = 1:num
     angles_mid1 = ur5InvKin(pen_mid1{i} * pen_tip_offset2);
     [~, min_error_i] = min(vecnorm(angles_mid1 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
     angles_mid = angles_mid1(:,min_error_i);
-    ur5.move_joints(angles_mid, 2.5);
-    pause(2.5)
+    ur5.move_joints(angles_mid, 0.15);
+    pause(0.15)
 end
 
 % q_current = ur5.get_current_joints();
@@ -76,12 +77,23 @@ for i = 1:num
     angles_mid2 = ur5InvKin(pen_mid2{i} * pen_tip_offset2);
     [~, min_error_i] = min(vecnorm(angles_mid2 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
     angles_mid = angles_mid2(:,min_error_i);
-    ur5.move_joints(angles_mid, 2.5);
-    pause(2.5)
+    ur5.move_joints(angles_mid, 0.15);
+    pause(0.15)
 end
 
-ur5.move_joints(angles_end, 10);
-pause(10)
+delta_pen3 = (pen_end - pen_corner2) / num;
+for i = 1:num
+    q_current = ur5.get_current_joints();
+    pen_mid3{i} = pen_corner2 + delta_pen3 * i;
+    angles_mid3 = ur5InvKin(pen_mid3{i} * pen_tip_offset2);
+    [~, min_error_i] = min(vecnorm(angles_mid3 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
+    angles_mid = angles_mid3(:,min_error_i);
+    ur5.move_joints(angles_mid, 0.15);
+    pause(0.15)
+end
+% ur5.move_joints(angles_end, 10);
+% pause(10)
+
 q_current = ur5.get_current_joints();
 g_end_now = ur5FwdKin_DH(q_current);
 [dSO3_end,dR3_end] = locationError(g_end,g_end_now);
