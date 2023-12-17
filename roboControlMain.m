@@ -34,6 +34,6 @@ if cType == 1
 elseif cType == 2
         RRControlFunc(ur5, theta_start, theta_end);
 elseif cType == 3
-        TransJacobianFunc(ur5, theta_start, theta_end);
+        JacobianTransFunc(ur5, theta_start, theta_end);
 end
 

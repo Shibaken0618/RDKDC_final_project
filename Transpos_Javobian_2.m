@@ -85,7 +85,7 @@ p_star = gst_star(1:3, 4);  % The goal translation
 [~, theta_star] = getXi(gst_star);
 
 q_k = ur5.get_current_joints();
-gst_present = ur5FwdKin(q_k);  % The present rigid body motion matrix
+gst_present = ur5FwdKin_DH(q_k);  % The present rigid body motion matrix
 p_present = gst_present(1:3, 4);
 disp('Current pos:')
 disp(p_present)
@@ -107,7 +107,7 @@ while norm(p_present - p_star) >= 0.005 || abs(theta_present - theta_star) >= 15
     ur5.move_joints(q_k, 2);
     pause(2);
  
-    gst_present = ur5FwdKin(q_k);
+    gst_present = ur5FwdKin_DH(q_k);
     p_present = gst_present(1:3, 4);
     disp('Current pos:')
     disp(p_present)
