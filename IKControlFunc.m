@@ -4,28 +4,24 @@ function IKControlFunc(ur5, theta_start, theta_end)
     ur5.swtich_to_ros_control()
     g_start = ur5FwdKin_DH(theta_start);
     g_end = ur5FwdKin_DH(theta_end);
-    
+    num = 50;
+    pen_tip_offset1 = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];  %% %% Coordinate of pen-tip in tool frame
+    pen_tip_offset2 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1];
+
     pen_start = g_start * pen_tip_offset1;
     pen_end = g_end * pen_tip_offset1;
     pen_end(1:3, 1:3) = pen_start(1:3, 1:3);
     
     [pen_corner1, pen_corner2] = intermediatePointCalc(pen_start,pen_end);
-    % g_corner1 = pen_corner1 * pen_tip_offset2;
-    % g_corner2 = pen_corner2 * pen_tip_offset2;
     
     ur5.move_joints(ur5.home, 10);
     pause(10)
     
-    ur5.move_joints(angles_start, 20);
+    ur5.move_joints(theta_start, 25);
     pause(20)
     q_current = ur5.get_current_joints();
     g_start_now = ur5FwdKin_DH(q_current);
     [dSO3_start,dR3_start] = locationError(g_start,g_start_now);
-    
-    % angles_mid1 = ur5InvKin(g_corner1);
-    % [~, min_error_i] = min(vecnorm(angles_mid1 - q_current, 1));
-    % ur5.move_joints(angles_mid1(:, min_error_i), 10);
-    % pause(10)
     
     delta_pen1 = (pen_corner1 - pen_start) / num;
     for i = 1:num
@@ -37,12 +33,6 @@ function IKControlFunc(ur5, theta_start, theta_end)
         ur5.move_joints(angles_mid, 0.15);
         pause(0.15)
     end
-    
-    % q_current = ur5.get_current_joints();
-    % angles_mid2 = ur5InvKin(g_corner2);
-    % [~, min_error_i] = min(vecnorm(angles_mid2 - q_current, 1));
-    % ur5.move_joints(angles_mid2(:, min_error_i), 10);
-    % pause(10)
     
     delta_pen2 = (pen_corner2 - pen_corner1) / num;
     for i = 1:num
@@ -65,8 +55,6 @@ function IKControlFunc(ur5, theta_start, theta_end)
         ur5.move_joints(angles_mid, 0.15);
         pause(0.15)
     end
-    % ur5.move_joints(angles_end, 10);
-    % pause(10)
     
     q_current = ur5.get_current_joints();
     g_end_now = ur5FwdKin_DH(q_current);

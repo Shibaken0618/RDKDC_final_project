@@ -14,10 +14,6 @@ g_end = [cos(x) -sin(x) 0 .4;
 theta_start = ur5InvKin(g_start);
 theta_end = ur5InvKin(g_end);
 ur5 = ur5_interface();
-pen_tip_offset = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];
-pen_tip_offset1 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1]; %inverse pen tip transformation from tool tip to base_link
-g_start = g_start * pen_tip_offset;
-g_end = g_end * pen_tip_offset;
 
 % %start position:
 % start=input("Record start position");
