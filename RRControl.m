@@ -1,15 +1,39 @@
-x = pi/2;
-g_start = [cos(x) -sin(x) 0 .25;
-           -sin(x) cos(x) 0 .6;
-           0 0 -1 .22;
-           0 0 0 1];
+% x = pi/2;
+% g_start = [cos(x) -sin(x) 0 .25;
+%            -sin(x) cos(x) 0 .6;
+%            0 0 -1 .22;
+%            0 0 0 1];
+% 
+% g_end = [cos(x) -sin(x) 0 .4;
+%         -sin(x) cos(x) 0 .45;
+%          0 0 -1 .22;
+%          0 0 0 1];
 
-g_end = [cos(x) -sin(x) 0 .4;
-        -sin(x) cos(x) 0 .45;
-         0 0 -1 .22;
-         0 0 0 1];
+%% Teach
+ur5.swtich_to_ros_control()
+disp('Teach the start point, press any button to continue.');
+% Switch to pendant control
+ur5.swtich_to_pendant_control();
+waitforbuttonpress;
 
-%% ur5RRcontrol test
+% Record the start point
+angles_start = ur5.get_current_joints();
+disp('The start point joint data is:')
+disp(angles_start)
+
+% Record the end point
+disp('Teach the end point, press any button to continue.');
+ur5.swtich_to_pendant_control();
+waitforbuttonpress;
+
+angles_end = ur5.get_current_joints();
+disp('The end point joint data is:')
+disp(angles_end)
+
+%% Draw
+ur5.swtich_to_ros_control()
+g_start = ur5FwdKin(angles_start);
+g_end = ur5FwdKin(angles_end);
 
 ur5 = ur5_interface();
 ur5.move_joints(ur5.home, 15);
