@@ -33,7 +33,7 @@ g_end = ur5FwdKin_DH(angles_end);
 
 pen_start = g_start * pen_tip_offset1;
 pen_end = g_end * pen_tip_offset1;
-pen_end(1:3, 1:3) = pen_start(1:3, 1:3);
+% pen_end(1:3, 1:3) = pen_start(1:3, 1:3);
 
 [pen_corner1, pen_corner2] = intermediatePointCalc(pen_start,pen_end);
 % g_corner1 = pen_corner1 * pen_tip_offset2;
