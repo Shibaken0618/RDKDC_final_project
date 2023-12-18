@@ -1,7 +1,6 @@
 %% Main function for Inverse Kinematics Control
 
-function IKControlFunc(ur5, theta_start, theta_end)
-    ur5.swtich_to_ros_control()
+function [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, theta_start, theta_end)
     g_start = ur5FwdKin_DH(theta_start);
     g_end = ur5FwdKin_DH(theta_end);
     pen_tip_offset1 = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];  %% %% Coordinate of pen-tip in tool frame
@@ -13,14 +12,14 @@ function IKControlFunc(ur5, theta_start, theta_end)
     
     [pen_corner1, pen_corner2] = intermediatePointCalc(pen_start,pen_end);
     
-    ur5.move_joints(ur5.home, 10);
-    pause(10)
+    %ur5.move_joints(ur5.home, 10);
+    %pause(10)
     
-    ur5.move_joints(theta_start, 25);
+    ur5.move_joints(theta_start, 20);
     pause(20)
     q_current = ur5.get_current_joints();
     g_start_now = ur5FwdKin_DH(q_current);
-    [dSO3_start,dR3_start] = locationError(g_start,g_start_now);
+    [so_err,sp_err] = locationError(g_start,g_start_now);
     
     num = 20;
     t_interval = 1;
@@ -59,17 +58,8 @@ function IKControlFunc(ur5, theta_start, theta_end)
     
     q_current = ur5.get_current_joints();
     g_end_now = ur5FwdKin_DH(q_current);
-    [dSO3_end,dR3_end] = locationError(g_end,g_end_now);
+    [eo_err,ep_err] = locationError(g_end,g_end_now);
     
-    ur5.move_joints(ur5.home, 10);
-    pause(10);
-    
-    disp('Rotation error of the start point is:')
-    disp(dSO3_start)
-    disp('Translation error of the start point is:')
-    disp(dR3_start)
-    disp('Rotation error of the end point is:')
-    disp(dSO3_end)
-    disp('Translation error of the end point is:')
-    disp(dR3_end)
+    %ur5.move_joints(ur5.home, 10);
+    %pause(10);
 end
