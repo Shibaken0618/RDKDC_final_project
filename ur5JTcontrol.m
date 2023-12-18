@@ -24,9 +24,8 @@ while norm(p_present - p_star) >= 0.005 || abs(theta_present - theta_star) >= 15
         break
     end
     %Check if pen tip is going to far into table
-    if (p_star(3,4) - p_present(3,4)) >= .01
+    if (p_star(3) - p_present(3)) >= .01
         warning('Pen is colliding with table. Aborting...')
-        finalerr = -1;
         break
     end
 
