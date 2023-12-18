@@ -23,6 +23,12 @@ while norm(p_present - p_star) >= 0.005 || abs(theta_present - theta_star) >= 15
         finalerr = -1;  %% Abort and return -1
         break
     end
+    %Check if pen tip is going to far into table
+    if (p_star(3,4) - p_present(3,4)) >= .01
+        warning('Pen is colliding with table. Aborting...')
+        finalerr = -1;
+        break
+    end
 
     q_k1 = q_k - K*t_step*transpose(ur5BodyJacobian(q_k))*xi_k;   %% q_k1 represents q_k+1 which is the next point
     q_k = q_k1;
