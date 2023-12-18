@@ -24,8 +24,8 @@ while norm(p_present - p_star) >= 0.005 || abs(theta_present - theta_star) >= 15
         break
     end
     %Check if pen tip is going to far into table
-    if (p_star(3) - p_present(3)) >= .01
-        warning('Pen is colliding with table. Aborting...')
+    if abs(p_star(3) - p_present(3)) >= .01
+        finalerr = -3;
         break
     end
     q_k1 = q_k - K*t_step*inv(ur5BodyJacobian(q_k))*xi_k;   %% q_k1 represents q_k+1 which is the next point
@@ -46,6 +46,9 @@ end
 
 if finalerr == -1
     warning('Matrix is close to being singular. Aborting.');
+    disp(finalerr);
+elseif finalerr == -3
+    warning('Exceed Z limit. Aborting')
     disp(finalerr);
 else
     finalerr = norm(p_present - p_star);
