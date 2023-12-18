@@ -51,7 +51,7 @@ angles_end = ur5.get_current_joints();
 disp('The end point joint data is:')
 disp(angles_end)
 
-%% Draw
+%%
 ur5.swtich_to_ros_control()
 ur5.move_joints(ur5.home, 15);
 pause(15);
@@ -75,3 +75,5 @@ disp(['Start Position Error: ', num2str(sp_err)])
 disp(['End Orientation Error: ', num2str(eo_err)])
 disp(['End Position Error: ', num2str(ep_err)])
 
+ur5.move_joints(ur5.home, 15);
+pause(15);

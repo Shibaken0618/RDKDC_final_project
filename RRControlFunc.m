@@ -20,7 +20,7 @@ function [sp_err,so_err,ep_err,eo_err] = RRControlFunc(ur5, theta_start, theta_e
     errorc2 = ur5RRcontrol(g_corner2, 0.1, ur5_interface);
 
     %move to the end point using R control
-    error_end = ur5RRcontrol(g_end, 0.05, ur5_interface);
+    error_end = ur5RRcontrol(g_end, 0.1, ur5_interface);
     %record end location error
     [eo_err,ep_err] = locationError(g_end, ur5FwdKin_DH(ur5.get_current_joints()));
 end
