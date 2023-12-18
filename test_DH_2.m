@@ -34,11 +34,9 @@ pen_start = g_start * pen_tip_offset1;
 pen_end = g_end * pen_tip_offset1;
 
 [pen_corner1, pen_corner2] = intermediatePointCalc(pen_start,pen_end);
-% g_corner1 = pen_corner1 * pen_tip_offset2;
-% g_corner2 = pen_corner2 * pen_tip_offset2;
 
-ur5.move_joints(ur5.home, 10);
-pause(10)
+% ur5.move_joints(ur5.home, 10);
+% pause(10)
 
 ur5.move_joints(angles_start, 20);
 pause(20)
@@ -51,7 +49,7 @@ g_start_now = ur5FwdKin_DH(q_current);
 % ur5.move_joints(angles_mid1(:, min_error_i), 10);
 % pause(10)
 
-num = 50;
+num = 150;
 t_step = 0.2;
 delta_pen1 = (pen_corner1 - pen_start) / num;
 for i = 1:num
@@ -67,13 +65,14 @@ for i = 1:num
     angles_mid1 = ur5InvKin(pen_mid1{i} * pen_tip_offset2);
     [~, min_error_i] = min(vecnorm(angles_mid1 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
     angles_mid = angles_mid1(:,min_error_i);
-
-    if abs(angles_mid(3,4) - g_current(3, 4)) >= 0.01
-        warning('Exceed Z limit');
-    else
-        ur5.move_joints(angles_mid, t_step);
-        pause(t_step)
-    end
+    ur5.move_joints(angles_mid, t_step);
+    pause(t_step)
+    % if abs(angles_mid(3,4) - g_current(3, 4)) >= 0.01
+    %     warning('Exceed Z limit');
+    % else
+    %     ur5.move_joints(angles_mid, t_step);
+    %     pause(t_step)
+    % end
 end
 
 % q_current = ur5.get_current_joints();
@@ -95,13 +94,14 @@ for i = 1:num
     angles_mid2 = ur5InvKin(pen_mid2{i} * pen_tip_offset2);
     [~, min_error_i] = min(vecnorm(angles_mid2 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
     angles_mid = angles_mid2(:,min_error_i);
-
-    if abs(angles_mid(3,4) - g_current(3, 4)) >= 0.01
-        warning('Exceed Z limit');
-    else
-        ur5.move_joints(angles_mid, t_step);
-        pause(t_step)
-    end
+    ur5.move_joints(angles_mid, t_step);
+    pause(t_step)
+    % if abs(angles_mid(3,4) - g_current(3, 4)) >= 0.01
+    %     warning('Exceed Z limit');
+    % else
+    %     ur5.move_joints(angles_mid, t_step);
+    %     pause(t_step)
+    % end
 end
 
 delta_pen3 = (pen_end - pen_corner2) / num;
@@ -119,14 +119,16 @@ for i = 1:num
     angles_mid = angles_mid3(:,min_error_i);
     ur5.move_joints(angles_mid, t_step);
     pause(t_step)
-    
-    if abs(angles_mid(3,4) - g_current(3, 4)) >= 0.01
-        warning('Exceed Z limit');
-    else
-        ur5.move_joints(angles_mid, t_step);
-        pause(t_step)
-    end
+    ur5.move_joints(angles_mid, t_step);
+    pause(t_step)
+    % if abs(angles_mid(3,4) - g_current(3, 4)) >= 0.01
+    %     warning('Exceed Z limit');
+    % else
+    %     ur5.move_joints(angles_mid, t_step);
+    %     pause(t_step)
+    % end
 end
+
 % ur5.move_joints(angles_end, 10);
 % pause(10)
 
