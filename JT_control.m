@@ -22,6 +22,12 @@ disp('The end point is:')
 disp(angles_end)
 ur5.swtich_to_ros_control();
 
+ur5.move_joints(ur5.home, 15);
+pause(15);
+
+ur5.move_joints(angles_start, 20);
+pause(20)
+
 %% Draw
 g_start = ur5FwdKin_DH(angles_start);
 g_end = ur5FwdKin_DH(angles_end);
