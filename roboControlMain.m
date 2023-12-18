@@ -44,9 +44,9 @@ ur5.move_joints(ur5.home, 15);
 pause(15);
 
 % choose control type
-cType = input("Choose mode: 1 -> Inv Kin Control, 2 -> RR Control, 3 -> Trans Jac Control");
+cType = input("Choose mode: 1 -> Inv Kin Control, 2 -> RR Control, 3 -> JT Control");
 while (cType ~= 1 && cType ~= 2 && cType ~= 3)
-    cType = input("Invalid input:1 -> Inv Kin Control, 2 -> RR Control, 3 -> Trans Control");
+    cType = input("Invalid input:1 -> Inv Kin Control, 2 -> RR Control, 3 -> JT Control");
 end
 if cType == 1
     [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, angles_start, angles_end);
@@ -57,8 +57,8 @@ elseif cType == 3
 end
 
 %display location and orientation error
-disp(['Start Orientation Error: ', num2str(start_orientation_error)])
-disp(['Start Position Error: ', num2str(start_position_error)])
-disp(['End Orientation Error: ', num2str(end_orientation_error)])
-disp(['End Position Error: ', num2str(end_position_error)])
+disp(['Start Orientation Error: ', num2str(so_err)])
+disp(['Start Position Error: ', num2str(sp_err)])
+disp(['End Orientation Error: ', num2str(eo_err)])
+disp(['End Position Error: ', num2str(ep_err)])
 

@@ -14,7 +14,6 @@ function [sp_err,so_err,ep_err,eo_err] = JTControlFunc(ur5, theta_start, theta_e
     
     %move to end position using JT control
     error_end = ur5JTcontrol(g_end, 0.05, ur5_interface);
-    
-    %record end location error
+
     [eo_err,ep_err] = locationError(g_end, ur5FwdKin_DH(ur5.get_current_joints()));
 end

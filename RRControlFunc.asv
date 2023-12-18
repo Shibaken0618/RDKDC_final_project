@@ -1,6 +1,6 @@
 %% main function for RR Control
 
-function [sl_err,so_err,el_err,eo_err] = RRControlFunc(ur5, theta_start, theta_end)
+function [sp_err,so_err,ep_err,eo_err] = RRControlFunc(ur5, theta_start, theta_end)
     g_start = ur5FwdKin_DH(theta_start);
     g_end = ur5FwdKin_DH(theta_end);
 
@@ -9,15 +9,11 @@ function [sl_err,so_err,el_err,eo_err] = RRControlFunc(ur5, theta_start, theta_e
     ur5.move_joints(theta_start, 15);
     pause(15)
 
-    [so_err,sl_err] = locationError(g_start, ur5FwdKin_DH(ur5.get_current_joints()));
-    disp(['Start Orientation Error: ', num2str(start_orientation_error)])
-    disp(['Start Position Error: ', num2str(start_position_error)])
-    error1 = ur5RRcontrol(g_corner1, 0.1, ur5_interface);
-    error2 = ur5RRcontrol(g_corner2, 0.1, ur5_interface);
-    disp('The goal position is:');
-    disp(g_end)
-    error = ur5RRcontrol(g_end, 0.05, ur5_interface);
-    [end_orientation_error,end_position_error] = locationError(g_end, ur5FwdKin_DH(ur5.get_current_joints()));
-    disp(['End Orientation Error: ', num2str(end_orientation_error)])
-    disp(['End Position Error: ', num2str(end_position_error)])
+    [so_err,sp_err] = locationError(g_start, ur5FwdKin_DH(ur5.get_current_joints()));
+    
+    errorc1 = ur5RRcontrol(g_corner1, 0.1, ur5_interface);
+    errorc2 = ur5RRcontrol(g_corner2, 0.1, ur5_interface);
+    error_end = ur5RRcontrol(g_end, 0.05, ur5_interface);
+
+    [eo_err,ep_err] = locationError(g_end, ur5FwdKin_DH(ur5.get_current_joints()));
 end
