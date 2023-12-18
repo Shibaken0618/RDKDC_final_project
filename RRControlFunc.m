@@ -4,9 +4,20 @@ function [sp_err,so_err,ep_err,eo_err] = RRControlFunc(ur5, theta_start, theta_e
     %calculate the transformation matrices
     g_start = ur5FwdKin_DH(theta_start);
     g_end = ur5FwdKin_DH(theta_end);
+
+    %initialize pen offset matrices to use
+    pen_tip_offset1 = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];  %% %% Coordinate of pen-tip in tool frame
+    pen_tip_offset2 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1];
+ 
+    pen_start = g_start * pen_tip_offset1;
+    pen_end = g_end * pen_tip_offset1;
     
+    pen_end(1:3, 1:3) = pen_start(1:3, 1:3);
+
     %caluclate the open rectangle corner points
-    [g_corner1, g_corner2] = intermediatePointCalc(g_start,g_end);
+    [g_corner1, g_corner2] = intermediatePointCalc(pen_start,pen_end);
+    g_corner1 = g_corner1 * pen_tip_offset2;
+    g_corner2 = g_corner2 * pen_tip_offset2;
     
     %move to start position
     ur5.move_joints(theta_start, 15);

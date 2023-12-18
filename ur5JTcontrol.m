@@ -1,7 +1,7 @@
 function finalerr = ur5JTcontrol(gdesired, K, ur5_interface)
 ur5 = ur5_interface;
 
-t_step = 2;
+t_step = 1;
 finalerr = 0;
 
 q_k = ur5.get_current_joints();

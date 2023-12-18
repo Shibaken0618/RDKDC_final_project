@@ -19,15 +19,15 @@
 
 ur5 = ur5_interface();
 
-start_frame = tf_frame('base_link','start',eye(4));  %% Start point frame
-pause(1);
-start_frame.move_frame('base_link',g_start);
-
-end_frame = tf_frame('base_link','end',eye(4));  %% End point frame
-pause(1);
-end_frame.move_frame('base_link',g_end);
-
-pen_tip_frame = tf_frame('tool0','pen tip',pen_tip_offset);  %% Pen-tip frame
+% start_frame = tf_frame('base_link','start',eye(4));  %% Start point frame
+% pause(1);
+% start_frame.move_frame('base_link',g_start);
+% 
+% end_frame = tf_frame('base_link','end',eye(4));  %% End point frame
+% pause(1);
+% end_frame.move_frame('base_link',g_end);
+% 
+% pen_tip_frame = tf_frame('tool0','pen tip',pen_tip_offset);  %% Pen-tip frame
 
 
 %% Teach
@@ -53,6 +53,7 @@ disp(angles_end)
 
 %%
 ur5.swtich_to_ros_control()
+pause(2)
 ur5.move_joints(ur5.home, 15);
 pause(15);
 

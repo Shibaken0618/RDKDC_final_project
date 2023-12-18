@@ -27,7 +27,7 @@ function [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, theta_start, theta_e
     
     %create num points between start and corner1 point
     num = 150;
-    t_interval = 0.1;
+    t_step = .1;
     delta_pen1 = (pen_corner1 - pen_start) / num;
     %move through points that connect start and corner1 points
     for i = 1:num

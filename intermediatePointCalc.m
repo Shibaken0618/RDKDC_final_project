@@ -10,7 +10,7 @@ L2 = .05; %length of last line
 C = norm(p_end-p_start);
 
 %adjust open rectangle length if distance is too small
-if C<.155
+if C <.15
     L1 = 7/12 * C;
     L2 = 1/4 * C;
 end
