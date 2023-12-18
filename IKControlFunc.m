@@ -22,8 +22,8 @@ function IKControlFunc(ur5, theta_start, theta_end)
     g_start_now = ur5FwdKin_DH(q_current);
     [dSO3_start,dR3_start] = locationError(g_start,g_start_now);
     
-    num = 50;
-    t_interval = 0.15;
+    num = 20;
+    t_interval = 1;
     delta_pen1 = (pen_corner1 - pen_start) / num;
     for i = 1:num
         q_current = ur5.get_current_joints();
