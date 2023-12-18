@@ -22,6 +22,7 @@ alpha4 = pi/2;
 alpha5 = -pi/2;
 alpha6 = 0;
 
+%DH transformation matrices
 T01 = DH(a1, alpha1, d1, pi + angles(1));
 T12 = DH(a2, alpha2, d2, angles(2));
 T23 = DH(a3, alpha3, d3, angles(3));
