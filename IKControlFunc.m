@@ -27,13 +27,13 @@ function [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, theta_start, theta_e
     
     %create num points between start and corner1 point
     num = 150;
-    t_interval = 0.2;
+    t_interval = 0.1;
     delta_pen1 = (pen_corner1 - pen_start) / num;
     %move through points that connect start and corner1 points
     for i = 1:num
         q_current = ur5.get_current_joints(); %get current joint angles
 
-        if abs(manipulability(ur5BodyJacobian(q_current), 'detjac')) <0.00001
+        if abs(manipulability(ur5BodyJacobian(q_current), 'detjac')) <0.00001  %% Singularity detection
             finalerr = -1;  %% Abort and return -1
             break
         end
@@ -42,8 +42,19 @@ function [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, theta_start, theta_e
         angles_mid1 = ur5InvKin(pen_mid1{i} * pen_tip_offset2); %angles to move to ith midpoint
         [~, min_error_i] = min(vecnorm(angles_mid1 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
         angles_mid = angles_mid1(:,min_error_i);
-        ur5.move_joints(angles_mid, t_interval); %move to mid point i
-        pause(t_interval)
+        g_mid = ur5FwdKin_DH(angles_mid);
+
+        if abs(g_mid(3,4) - g_end(3, 4)) >= 0.01   %% Z-limit detection
+            finalerr = -3;
+            break
+        else
+            ur5.move_joints(angles_mid, t_step);
+            pause(t_step)
+        end
+
+        ur5.move_joints(angles_mid, t_step);
+        pause(t_step)
+
     end 
     
     %same algorithm as above that moves from corner1 to corner2
@@ -60,8 +71,18 @@ function [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, theta_start, theta_e
         angles_mid2 = ur5InvKin(pen_mid2{i} * pen_tip_offset2);
         [~, min_error_i] = min(vecnorm(angles_mid2 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
         angles_mid = angles_mid2(:,min_error_i);
-        ur5.move_joints(angles_mid, t_interval);
-        pause(t_interval)
+        g_mid = ur5FwdKin_DH(angles_mid);
+
+        if abs(g_mid(3,4) - g_end(3, 4)) >= 0.01
+            finalerr = -3;
+            break
+        else
+            ur5.move_joints(angles_mid, t_step);
+            pause(t_step)
+        end
+
+        ur5.move_joints(angles_mid, t_step);
+        pause(t_step)
     end
     
     %same algorithm as above but move from corner2 to end point
@@ -78,15 +99,35 @@ function [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, theta_start, theta_e
         angles_mid3 = ur5InvKin(pen_mid3{i} * pen_tip_offset2);
         [~, min_error_i] = min(vecnorm(angles_mid3 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
         angles_mid = angles_mid3(:,min_error_i);
-        ur5.move_joints(angles_mid, t_interval);
-        pause(t_interval)
+        g_mid = ur5FwdKin_DH(angles_mid);
+
+        if abs(g_mid(3,4) - g_end(3, 4)) >= 0.01
+            finalerr = -3;
+            break
+        else
+            ur5.move_joints(angles_mid, t_step);
+            pause(t_step)
+        end
+
+        ur5.move_joints(angles_mid, t_step);
+        pause(t_step)
     end
     
-    %record end location error
-    q_current = ur5.get_current_joints();
-    g_end_now = ur5FwdKin_DH(q_current);
-    [eo_err,ep_err] = locationError(g_end,g_end_now);
-    
+    if finalerr == -1
+        warning('Matrix is close to being singular. Aborting.');
+        disp(finalerr);
+    elseif finalerr == -2
+        warning('Potential collision detected. Aborting. ')
+    elseif finalerr == -3
+        warning('Exceed Z limit. Aborting')
+    else
+        %record end location error
+        q_current = ur5.get_current_joints();
+        g_end_now = ur5FwdKin_DH(q_current);
+        [eo_err,ep_err] = locationError(g_end,g_end_now);
+    end
+
     %ur5.move_joints(ur5.home, 10);
     %pause(10);
+    
 end
