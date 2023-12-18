@@ -1,10 +1,6 @@
 %% main function for RR Control
 
 function RRControlFunc(ur5, theta_start, theta_end)
-    ur5.swtich_to_ros_control()
-    num = 50;
-    pen_tip_offset = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];
-    pen_tip_offset1 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1]; %inverse pen tip transformation from tool tip to base_link
     g_start = ur5FwdKin_DH(theta_start);
     g_end = ur5FwdKin_DH(theta_end);
 
