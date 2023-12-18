@@ -1,5 +1,5 @@
 %% main script to run robot motion control
-
+% clc; clear;
 % x = pi/2;
 % g_start = [cos(x) -sin(x) 0 .25;
 %            -sin(x) cos(x) 0 .6;
@@ -12,10 +12,23 @@
 %          0 0 0 1];
 % pen_tip_offset = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];
 % pen_tip_offset_inv = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1]; %inverse pen tip transformation from tool tip to base_link
-% theta_start = ur5InvKin(g_start * pen_tip_offset_inv);
-% theta_end = ur5InvKin(g_end * pen_tip_offset_inv);
+% angles_start = ur5InvKin(g_start * pen_tip_offset_inv);
+% angles_end = ur5InvKin(g_end * pen_tip_offset_inv);
+% angles_start = angles_start(:,6);
+% angles_end = angles_end(:,6);
 
 ur5 = ur5_interface();
+
+start_frame = tf_frame('base_link','start',eye(4));  %% Start point frame
+pause(1);
+start_frame.move_frame('base_link',g_start);
+
+end_frame = tf_frame('base_link','end',eye(4));  %% End point frame
+pause(1);
+end_frame.move_frame('base_link',g_end);
+
+pen_tip_frame = tf_frame('tool0','pen tip',pen_tip_offset);  %% Pen-tip frame
+
 
 %% Teach
 % ur5.swtich_to_ros_control()
