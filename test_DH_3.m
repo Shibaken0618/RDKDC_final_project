@@ -23,9 +23,10 @@ pen_start = g_start * pen_tip_offset1;
 
 t_step = 1;
 [x, y] = extra(150);
-x = x.*0.01;
-y = (y - y(1)).*0.01;
+x = x.*0.003;
+y = (y - y(1)).*0.003;
 points = size(x, 2);
+count = 1;
 
 for i = 1:points
     pen_extra{i} = pen_start; 
@@ -36,9 +37,8 @@ for i = 1:points
     angles_mid1 = ur5InvKin(pen_extra{i} * pen_tip_offset2);
     [~, min_error_i] = min(vecnorm(angles_mid1 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
     angles_mid = angles_mid1(:,min_error_i);
+    Frame_G = tf_frame('base_link', ['Frame_G_', num2str(count)], pen_extra{i});
+    count = count+1;
     ur5.move_joints(angles_mid, t_step);
     pause(t_step)
 end
-
-% ur5.move_joints(ur5.home, 10);
-% pause(10);
