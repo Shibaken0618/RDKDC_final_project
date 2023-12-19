@@ -1,6 +1,6 @@
 %% main function for RR Control
 
-function [sp_err,so_err,ep_err,eo_err] = JTControlFunc(ur5, theta_start, theta_end)
+function [sp_err,so_err,ep_err,eo_err] = JTControlFunc_2(ur5, theta_start, theta_end)
     %calculate the transformation matrices
     num = 10;
     g_start = ur5FwdKin_DH(theta_start);
