@@ -2,21 +2,17 @@
 
 function [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, theta_start, theta_end)
     %get transformation matrices
-    g_start = ur5FwdKin_DH(theta_start);
-    g_end = ur5FwdKin_DH(theta_end);
+    g_start = ur5FwdKin_DH(theta_start);  % transformation matrix of end effector start point
+    g_end = ur5FwdKin_DH(theta_end);  % transformation matrix of end effector goal point
     %initialize pen offset matrices to use
-    pen_tip_offset1 = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];  %% %% Coordinate of pen-tip in tool frame
-    pen_tip_offset2 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1];
+    pen_tip_offset1 = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];  % coordinate of pen-tip in tool frame
+    pen_tip_offset2 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1];  % inverse of offset1
     %mutliply pen tip offset to tool frame
-    pen_start = g_start * pen_tip_offset1;
-    pen_end = g_end * pen_tip_offset1;
-    % pen_end(1:3, 1:3) = pen_start(1:3, 1:3);
+    pen_start = g_start * pen_tip_offset1;  % transformation matrix of pen-tip start point
+    pen_end = g_end * pen_tip_offset1;  % transformation matrix of pen-tip end point
     
     %calculate intermediate points for open rectangle
     [pen_corner1, pen_corner2] = intermediatePointCalc(pen_start,pen_end);
-    
-    %ur5.move_joints(ur5.home, 10);
-    %pause(10)
     
     %move to start position and record start location error
     ur5.move_joints(theta_start, 20);
@@ -38,7 +34,7 @@ function [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, theta_start, theta_e
             break
         end
         
-        pen_mid1{i} = pen_start + delta_pen1 * i; %calculate midpoint to travel to
+        pen_mid1{i} = pen_start + delta_pen1 * i; %calculate pen-tip midpoint to travel to
         angles_mid1 = ur5InvKin(pen_mid1{i} * pen_tip_offset2); %angles to move to ith midpoint
         [~, min_error_i] = min(vecnorm(angles_mid1 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
         angles_mid = angles_mid1(:,min_error_i);
@@ -69,7 +65,7 @@ function [sp_err,so_err,ep_err,eo_err] = IKControlFunc(ur5, theta_start, theta_e
         
         pen_mid2{i} = pen_corner1 + delta_pen2 * i;
         angles_mid2 = ur5InvKin(pen_mid2{i} * pen_tip_offset2);
-        [~, min_error_i] = min(vecnorm(angles_mid2 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
+        [~, min_error_i] = min(vecnorm(angles_mid2 - q_current, 1));  %% Using current joints data to find the closest matching kinematic configuration 
         angles_mid = angles_mid2(:,min_error_i);
         g_mid = ur5FwdKin_DH(angles_mid);
 
