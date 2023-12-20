@@ -33,6 +33,7 @@ ur5 = ur5_interface();
 
 
 %% Teach
+%Pick points using UR5 freedrive
 % ur5.swtich_to_ros_control()
 disp('Teach the start point, press any button to continue.');
 % Switch to pendant control
