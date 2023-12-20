@@ -1,3 +1,4 @@
+%%Calculates the dSO3 and dR3 error for the start and end locations
 function [dSO3,dR3] = locationError(g_desired,g_current)
 R_d = g_desired(1:3,1:3);
 R_c = g_current(1:3,1:3);
