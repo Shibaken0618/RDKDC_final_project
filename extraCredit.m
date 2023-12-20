@@ -1,6 +1,6 @@
 %% Initialize
 ur5 = ur5_interface;
-pen_tip_offset1 = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];  %% %% Coordinate of pen-tip in tool frame
+pen_tip_offset1 = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];  % Coordinate of pen-tip in tool frame
 pen_tip_offset2 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1];
 
 %% Teach
@@ -22,20 +22,20 @@ g_start = ur5FwdKin_DH(angles_start);
 pen_start = g_start * pen_tip_offset1;
 
 t_step = 1;
-[x, y] = extra(150);
-x = x.*0.003;
+[x, y] = extra(150);  % Generate the desired trajectory
+x = x.*0.003;  % Resize the figure shape
 y = (y - y(1)).*0.003;
 points = size(x, 2);
 count = 1;
 
-for i = 1:points
+for i = 1:points  % Generate 150 intermediate points
     pen_extra{i} = pen_start; 
     pen_extra{i}(1, 4) = pen_start(1, 4) + x(i);
     pen_extra{i}(2, 4) = pen_start(2, 4) + y(i);
 
     q_current = ur5.get_current_joints();
     angles_mid1 = ur5InvKin(pen_extra{i} * pen_tip_offset2);
-    [~, min_error_i] = min(vecnorm(angles_mid1 - q_current, 1));  %% Using joints data to find the closest matching kinematic configuration 
+    [~, min_error_i] = min(vecnorm(angles_mid1 - q_current, 1));  % Using current joints data to find the closest matching kinematic configuration 
     angles_mid = angles_mid1(:,min_error_i);
     Frame_G = tf_frame('base_link', ['Frame_G_', num2str(count)], pen_extra{i});
     count = count+1;
