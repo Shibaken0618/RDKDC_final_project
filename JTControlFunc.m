@@ -7,8 +7,8 @@ function [sp_err,so_err,ep_err,eo_err] = JTControlFunc(ur5, theta_start, theta_e
     pen_tip_offset1 = [1 0 0 0; 0 1 0 -.049; 0 0 1 .12228; 0 0 0 1];  %% %% Coordinate of pen-tip in tool frame
     pen_tip_offset2 = [1 0 0 0; 0 1 0 .049; 0 0 1 -.12228; 0 0 0 1];
 
-    pen_start = g_start * pen_tip_offset1;
-    pen_end = g_end * pen_tip_offset1;
+    pen_start = g_start * pen_tip_offset1; % transformation matrix of pen-tip start point
+    pen_end = g_end * pen_tip_offset1;  % transformation matrix of pen-tip end point
 
     pen_end(1:3, 1:3) = pen_start(1:3, 1:3);
 
