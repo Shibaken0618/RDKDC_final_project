@@ -23,6 +23,7 @@ while norm(p_present - p_star) >= 0.005 || abs(theta_present - theta_star) >= 15
         finalerr = -1;  %% Abort and return -1
         break
     end
+    
     %Check if pen tip is going to far into table
     if abs(p_star(3) - p_present(3)) >= .01
         finalerr = -3;
