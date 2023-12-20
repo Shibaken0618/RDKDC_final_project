@@ -1,5 +1,7 @@
 %% main script to run robot motion control
 %Enter your own start and end transformation matrices
+% uncomment the section below (line 5 to 21) to run in simulation only.
+
 % clc; clear;
 % x = pi/2;
 % g_start = [cos(x) -sin(x) 0 .25;
@@ -21,6 +23,7 @@
 ur5 = ur5_interface();
 
 %Display start and end frames
+% uncomment section below to show frames in simulation (lines 27 to 35)
 % start_frame = tf_frame('base_link','start',eye(4));  %% Start point frame
 % pause(1);
 % start_frame.move_frame('base_link',g_start);

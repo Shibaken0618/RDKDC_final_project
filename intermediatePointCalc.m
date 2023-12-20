@@ -1,3 +1,5 @@
+%% function to calculate the intermediate points in the line/lines 
+
 function [point1, point2] = intermediatePointCalc(g_start,g_end)
 %get position vectors
 p_start = g_start(1:2,4);

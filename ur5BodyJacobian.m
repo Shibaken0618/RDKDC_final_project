@@ -1,3 +1,5 @@
+%% main function for finding body jacobian
+
 function J = ur5BodyJacobian(q)
 %Joint Distances (m)
 L = [89.2, 425, 392, 109.3, 94.75, 82.5] * 0.001;
